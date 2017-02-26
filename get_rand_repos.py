@@ -34,9 +34,11 @@ def request_loop():
 		else:
 			rate_resp = requests.get('https://api.github.com/rate_limit',
 				headers=headers).json()
-			print(rate_resp)
-			print("Sleeping due to rate limit.\n\tCounter: " + str(counter))
-			time.sleep(3660)
+			reset_time = int(rate_resp['rate']['reset'])
+			wait_dur = reset_time - int(time.time()) 
+			print("Sleeping for " + str(wait_dur) + " sec. due to rate limit.")
+			print("\tCounter: " + str(counter))
+			time.sleep(wait_dur)
 
 		for entry in j_resp:
 			if entry['private'] == False and entry['fork'] == False:
