@@ -1,10 +1,19 @@
 import requests, random, csv, sys, time
 from secrets import gh_auth_token
 
+counter = 0
 repos = {}
 base_url = 'https://api.github.com/repositories?since='
-token_str = "token " + gh_auth_token
+token_str = 'token ' + gh_auth_token
 headers = {'user-agent': 'prog-lang', 'Authorization': token_str}
+
+if len(sys.argv) == 3: # <repo_info_recover.csv> <counter>
+	print("Recovering from " + sys.argv[1])
+	counter = int(sys.argv[2])
+	with open(argv[1], 'r') as infile:
+		for line in infile:
+			split_line = line.strip('\n').split(',')
+			repos[split_line[0]] = split_line[1] 
 
 def dump_csv():
 	with open('repo_info.csv', 'w') as f:
@@ -13,7 +22,7 @@ def dump_csv():
 			csvwriter.writerow((k, v))
 
 def request_loop():
-	counter = 0
+	global counter
 	while counter <= 100000:
 		
 		rand_id = random.randrange(1, 82605000)
@@ -28,7 +37,6 @@ def request_loop():
 			print(rate_resp)
 			print("Sleeping due to rate limit.\n\tCounter: " + str(counter))
 			time.sleep(3660)
-			
 
 		for entry in j_resp:
 			if entry['private'] == False and entry['fork'] == False:
@@ -39,5 +47,13 @@ def request_loop():
 					counter += 1
 					break
 
-request_loop()
-dump_csv()
+		if counter % 100 == 0:
+			print("Counter: " + str(counter))
+
+try:
+	request_loop()
+except Exception as e:
+	print(e)
+finally:
+	dump_csv()
+	print("Counter: " + str(counter))
