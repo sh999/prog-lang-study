@@ -23,7 +23,7 @@ def dump_csv():
 
 def request_loop():
 	global counter
-	while counter <= 100000:
+	while counter < 100000:
 		
 		rand_id = random.randrange(1, 82605000)
 		url = base_url + str(rand_id)
