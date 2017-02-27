@@ -10,7 +10,7 @@ headers = {'user-agent': 'prog-lang', 'Authorization': token_str}
 if len(sys.argv) == 3: # <repo_info_recover.csv> <counter>
 	print("Recovering from " + sys.argv[1])
 	counter = int(sys.argv[2])
-	with open(argv[1], 'r') as infile:
+	with open(sys.argv[1], 'r') as infile:
 		for line in infile:
 			split_line = line.strip('\n').split(',')
 			repos[split_line[0]] = split_line[1] 
