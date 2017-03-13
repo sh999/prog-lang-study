@@ -14,10 +14,10 @@ HEADERS = {'user-agent': 'prog-lang', 'Authorization': TOKEN_STR}
 
 COUNTER = 0
 
-if len(sys.argv) == 2:
-	print("RECOVERING...\n")
-	COUNTER = int(sys.argv[1]) + 1
-	with open('repo_info.json', 'r') as infile:
+if len(sys.argv) == 3: # <repo_info_recover.json> <COUNTER>
+	print("Recovering from " + sys.argv[1])
+	COUNTER = int(sys.argv[2]) + 1
+	with open(sys.argv[1], 'r') as infile:
 		REPOS = json.load(infile)
 
 def load_csv():
