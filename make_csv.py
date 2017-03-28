@@ -6,7 +6,7 @@ New columns include individual months from start to end of entire time frame
 Plan to analyze csv file in R
 Input:  pickle file based on json file (built from get_stats.py)
 '''
-import sys, json, pickle
+import sys, json, pickle, statistics
 
 def timestamp_to_nth_month(commit_time,first_commit_time):
 	'''
@@ -34,13 +34,32 @@ def get_commit_months(commit_list):
 	months = years*12+months
 
 	commit_time = commit_list[4]
-	# print(timestamp_to_nth_month(commit_time,first_commit_time))
 
 	# print("\n")
-	commit_list = [timestamp_to_nth_month(commit,first_commit_time) for commit in commit_list]
-	# print(commit_list)
-	montly_commits = [ (i,commit_list.count(i)) for i in set(commit_list) ]
-	return montly_commits
+	commit_list = [timestamp_to_nth_month(commit,first_commit_time)+1 for commit in commit_list]
+	monthly_commits = [ (i,commit_list.count(i)) for i in set(commit_list) ]
+	monthly_commits = sorted(monthly_commits, key=lambda x: x[1])
+	unique_months = len(monthly_commits)
+
+	# active months set as percentile
+	THRESHOLD_INDEX = 0.75
+	active_index = int(unique_months*THRESHOLD_INDEX)
+	most_active_months = monthly_commits[active_index:]
+	most_active_months_key = [m[0] for m in most_active_months]
+
+	mean_time_most_active = statistics.mean(most_active_months_key)
+	if len(most_active_months_key) > 2:
+		stdev_most_active = statistics.stdev(most_active_months_key)
+		stdev_lifetime = stdev_most_active/months
+	else:
+		stdev_most_active = "NA"
+		stdev_lifetime = "NA"
+
+	if months != 0:
+		mean_lifetime = mean_time_most_active/months
+	else:
+		mean_lifetime = "NA"
+	return most_active_months + ["time mean:",mean_time_most_active,"time mean (% lifetime):",mean_lifetime,"stdev:",stdev_most_active, "stdev (% lifetime):",stdev_lifetime]
 
 
 def write_csv(file_string):
@@ -48,8 +67,7 @@ def write_csv(file_string):
 		Write csv with relevant info from json
 	'''
 	output = open(file_string+".all_info.csv","w")
-	START_YR = 1996
-	END_YR = 2017
+
 	print("Loading pickle...")
 	data = open(file_string,"rb")
 	data = pickle.load(data)
