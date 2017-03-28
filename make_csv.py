@@ -34,12 +34,13 @@ def get_commit_months(commit_list):
 	months = years*12+months
 
 	commit_time = commit_list[4]
-	print(timestamp_to_nth_month(commit_time,first_commit_time))
+	# print(timestamp_to_nth_month(commit_time,first_commit_time))
 
-	print("\n")
+	# print("\n")
 	commit_list = [timestamp_to_nth_month(commit,first_commit_time) for commit in commit_list]
-	print(commit_list)
-	return commit_list
+	# print(commit_list)
+	montly_commits = [ (i,commit_list.count(i)) for i in set(commit_list) ]
+	return montly_commits
 
 
 def write_csv(file_string):
