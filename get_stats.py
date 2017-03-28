@@ -48,7 +48,6 @@ def get_stats(pickle_filename):
 	# pprint(sorted_lang_lowcommits)
 
 json_file = sys.argv[2]
-print(sys.argv)
 if sys.argv[1] == "pickle":
 	make_pickle(json_file)
 elif sys.argv[1] == "stats":
