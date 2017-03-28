@@ -1,3 +1,7 @@
+# Large transient data
+*pickle*
+*json*
+
 ### macOS ###
 *.DS_Store
 .AppleDouble
@@ -42,6 +46,7 @@ Temporary Items
 __pycache__/
 *.py[cod]
 *$py.class
+
 
 # File with tokens
 secrets.py
