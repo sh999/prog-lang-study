@@ -9,15 +9,22 @@ from github import Github
 
 def get_issues(repo_name):
     print('Retreiving issue data from "{0}"...'.format(repo_name))
-    repository = github.get_repo(repo_name)
-    issues = [issue for issue in repository.get_issues()]
-    open = [issue for issue in issues if issue.state == 'open']
-    closed = [issue for issue in issues if issue.state == 'closed']
+    summary = ""
+    try:
+        repository = github.get_repo(repo_name)
+        print("repo is found")
+        issues = [issue for issue in repository.get_issues()]
+        open = [issue for issue in issues if issue.state == 'open']
+        closed = [issue for issue in issues if issue.state == 'closed']
+        print("Issues:")
 
-    print('{0} issues found. ({1} open, {2} closed)'.format(len(issues), len(open), len(closed)))
-    summary = '{0} issues found. ({1} open, {2} closed)'.format(len(issues), len(open), len(closed))
-    for issue in issues:
-        print('#{0:04d} ({1}):\t{2}'.format(issue.number, issue.state, issue.title))
+        print('{0} issues found. ({1} open, {2} closed)'.format(len(issues), len(open), len(closed)))
+        summary = '{0} issues found. ({1} open, {2} closed)'.format(len(issues), len(open), len(closed))
+        for issue in issues:
+            print('#{0:04d} ({1}):\t{2}'.format(issue.number, issue.state, issue.title))
+    except Exception as e:
+        print("error: ", e)
+        pass
     return summary
 
   
@@ -36,3 +43,4 @@ if __name__ == '__main__':
         repo_name = item.split(",")[1].rstrip()
         print(repo_name)
         summary = get_issues(repo_name)
+        print("summary: ", summary)
